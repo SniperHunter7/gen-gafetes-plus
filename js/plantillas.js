@@ -89,18 +89,17 @@ const cajasJuguetes = {
 const REGISTRO_PLANTILLAS = {
   juguetes: new Plantilla({
     clave: 'juguetes',
-    label: 'Olas de colores',
+    label: 'Diseño Genérico',
     frente:  'images/juguetes/Frente-Fondo.png',
     reverso: 'images/juguetes/Reverso-Fondo.png',
     cajas: cajasJuguetes
-  })
-
+  }),
   // Ejemplo para agregar la plantilla "espacio" (descomenta y ajusta):
-  // espacio: new Plantilla({
-  //   clave: 'espacio',
-  //   label: 'Espacio exterior',
-  //   frente:  'images/espacio/Frente-Fondo.png',
-  //   reverso: 'images/espacio/Reverso-Fondo.png',
-  //   cajas: cajasJuguetes // o un objeto de cajas nuevo si el diseño cambia de lugar los campos
-  // })
+  TS5: new Plantilla({
+     clave: 'TS5',
+     label: 'Toy Story 5',
+     frente:  'images/TS5/Frente-Fondo.png',
+     reverso: 'images/TS5/Reverso-Fondo.png',
+     cajas: cajasJuguetes // o un objeto de cajas nuevo si el diseño cambia de lugar los campos
+   })
 };
