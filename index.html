@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Gafete Escolar</title>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>🪪 Generador de Gafete Escolar</h1>
+  <p class="subtitle">Captura los datos, genera el PDF y listo — para mandar a enmicar con cordón</p>
+
+  <div class="privacy">
+    <span class="icon">🔒</span>
+    <span>Tus datos se procesan <strong>únicamente en este navegador</strong> para armar el PDF. No se envían a ningún servidor, no se guardan en ningún lado, y se borran de la memoria de la página en cuanto el PDF se genera.</span>
+  </div>
+
+  <div class="card">
+    <h2>Plantilla</h2>
+    <div class="grid">
+      <div class="full">
+        <label for="plantilla">Diseño del gafete</label>
+        <select id="plantilla"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Frente del gafete</h2>
+    <div class="grid">
+      <div class="full">
+        <label for="nombre">Nombre del alumno(a)</label>
+        <input type="text" id="nombre" placeholder="Ej. Alexander García Pedro">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Reverso del gafete</h2>
+    <div class="grid">
+      <div>
+        <label for="escuela">Escuela</label>
+        <input type="text" id="escuela" placeholder="Nombre de la escuela">
+      </div>
+      <div>
+        <label for="maestra">Maestra</label>
+        <input type="text" id="maestra" placeholder="Nombre de la maestra">
+      </div>
+      <div class="full">
+        <label for="grado">Grado y Grupo</label>
+        <input type="text" id="grado" placeholder='Ej. 3° "G"'>
+      </div>
+      <div>
+        <label for="telPapa">En caso de emergencia — Papá</label>
+        <input type="tel" id="telPapa" placeholder="Teléfono de papá">
+      </div>
+      <div>
+        <label for="telMama">En caso de emergencia — Mamá</label>
+        <input type="tel" id="telMama" placeholder="Teléfono de mamá">
+      </div>
+      <div class="full">
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" placeholder="Calle, número, colonia">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="actions">
+      <button id="btnGenerar">📄 Generar PDF</button>
+      <button id="btnLimpiar" type="button">🧹 Borrar datos</button>
+    </div>
+    <div id="status"></div>
+    <div class="previews" id="previews">
+      <figure>
+        <figcaption>Frente</figcaption>
+        <canvas id="canvasFront" width="1011" height="639"></canvas>
+      </figure>
+      <figure>
+        <figcaption>Reverso</figcaption>
+        <canvas id="canvasBack" width="1011" height="639"></canvas>
+      </figure>
+    </div>
+  </div>
+
+  <footer>Gafete escolar · generado localmente en tu navegador</footer>
+</div>
+
+<!-- Librería externa para la generación de PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!--
+  Orden de carga de los módulos propios del proyecto.
+  IMPORTANTE: este orden importa, cada archivo depende de los anteriores.
+  1) config.js      -> constantes globales
+  2) utilidades.js  -> funciones auxiliares (usa config.js)
+  3) plantillas.js  -> clase Plantilla + registro (usa utilidades.js y config.js)
+  4) canvas.js      -> motor de dibujo (usa utilidades.js y config.js)
+  5) pdf.js         -> generación del PDF (usa config.js y jsPDF)
+  6) app.js         -> conecta todo con la interfaz (usa todos los anteriores)
+-->
+<script src="js/config.js"></script>
+<script src="js/utilidades.js"></script>
+<script src="js/plantillas.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/pdf.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
