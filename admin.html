@@ -120,31 +120,59 @@
         <button id="btnActivarDebug" class="btn-secundario">🔲 Mostrar cajas</button>
       </div>
       <p id="debugMsg" class="modal-msg"></p>
+
+      <div class="aviso-advertencia">
+        <span style="font-size:1.1rem;line-height:1;">⚠️</span>
+        <span>
+          <strong>Cuidado con cajas traslapadas:</strong> si el borde de una caja
+          queda encimado sobre otra, al dar clic en esa zona compartida el sistema
+          puede seleccionar la caja equivocada (toma la que esté "más arriba").
+          Procura dejar un pequeño espacio entre cajas vecinas.
+        </span>
+      </div>
+
       <div class="previews">
         <figure>
-          <figcaption>Frente</figcaption>
-          <canvas id="canvasDebugFrente" width="1011" height="639"></canvas>
+          <figcaption>Frente (mover / redimensionar)</figcaption>
+          <div class="canvas-editor-wrap">
+            <canvas id="canvasDebugFrente" width="1011" height="639"></canvas>
+          </div>
         </figure>
         <figure>
           <figcaption>Reverso</figcaption>
-          <canvas id="canvasDebugReverso" width="1011" height="639"></canvas>
+          <div class="canvas-editor-wrap">
+            <canvas id="canvasDebugReverso" width="1011" height="639"></canvas>
+          </div>
         </figure>
       </div>
+
+      <div class="grid" style="margin-top:14px;">
+        <div class="full checkbox-row">
+          <input type="checkbox" id="chkRedibujarCaja">
+          <label for="chkRedibujarCaja" style="margin:0;">Redibujar una caja del reverso desde cero (en vez de mover/redimensionar)</label>
+        </div>
+        <div class="full" id="wrapSelectRedibujar" style="display:none;">
+          <label for="selectCampoRedibujar">Caja que vas a redibujar</label>
+          <select id="selectCampoRedibujar">
+            <option value="escuela">escuela</option>
+            <option value="maestra">maestra</option>
+            <option value="grado_grupo">grado_grupo</option>
+            <option value="tel_papa">tel_papa</option>
+            <option value="tel_mama">tel_mama</option>
+            <option value="direccion">direccion</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btnGuardarCambiosCoordenadas" style="display:none;">💾 Guardar cambios de coordenadas</button>
+      </div>
+      <p id="debugGuardarMsg" class="modal-msg"></p>
     </div>
 
     <!-- ===== Sección: Códigos ===== -->
     <div class="card">
       <h2>Generar lote de códigos de impresión</h2>
-      <div style="background:#FEF3C7; border:1px solid #FBBF24; border-radius:10px; padding:12px 16px; font-size:0.85rem; color:#92400E; margin-top:10px; display:flex; gap:8px; align-items:flex-start;">
-        <span style="font-size:1.1rem; line-height:1;">⚠️</span>
-        <span>
-          <strong>Importante:</strong> si usas un <code>ID de lote</code> que ya existe,
-          los datos de ese lote (cliente, cantidad, notas) se <strong>sobrescriben por completo</strong>,
-          y la cantidad no se suma a los códigos generados anteriormente con ese mismo ID.
-          Usa un ID de lote distinto para cada pedido real (ej. <code>escuela-caic-2026-07</code>),
-          y deja <code>"prueba"</code> únicamente para pruebas técnicas.
-        </span>
-      </div>
       <div class="grid">
         <div>
           <label for="cLoteId">ID de lote</label>
@@ -166,7 +194,7 @@
           <label for="cNotas">Notas</label>
           <input type="text" id="cNotas" placeholder="ej. Pago por transferencia, comprobante recibido">
         </div>
-      </div>      
+      </div>
       <div class="actions">
         <button id="btnGenerarCodigos">🎟️ Generar códigos</button>
       </div>
