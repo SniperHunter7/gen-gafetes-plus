@@ -1,8 +1,7 @@
 /**
  * estilos.css
  * -----------------------------------------------------------------------
- * Estilos de la interfaz del Generador de Gafetes. No depende de ningún
- * archivo JS; index.html lo enlaza en el <head>.
+ * Estilos de la interfaz del Generador de Gafetes.
  * -----------------------------------------------------------------------
  */
 
@@ -60,12 +59,19 @@ input[type=text], input[type=tel], select{
 }
 input:focus, select:focus{outline:none;border-color:var(--primary);background:#fff;}
 
+.link-contacto{
+  display:inline-block;font-size:0.85rem;color:var(--primary-dark);
+  text-decoration:none;margin-top:2px;
+}
+.link-contacto:hover{text-decoration:underline;}
+
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
 button{
   font-family:inherit;font-size:0.95rem;font-weight:bold;border:none;border-radius:10px;
   padding:13px 22px;cursor:pointer;transition:transform .08s ease, opacity .15s ease;
 }
 button:active{transform:scale(0.97);}
+button:disabled{opacity:0.6;cursor:not-allowed;}
 #btnGenerar{background:var(--primary);color:#fff;flex:1;min-width:200px;}
 #btnGenerar:hover{background:var(--primary-dark);}
 #btnLimpiar{background:transparent;color:var(--danger);border:1.5px solid var(--danger);}
@@ -84,6 +90,32 @@ button:active{transform:scale(0.97);}
 }
 
 footer{text-align:center;color:var(--muted);font-size:0.8rem;margin-top:30px;}
+
+/* ---------- Modal del código de impresión ---------- */
+.modal-overlay{
+  display:none;
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(15,23,42,0.55);
+  align-items:center;justify-content:center;
+  z-index:1000;
+  padding:16px;
+}
+.modal-box{
+  background:#fff;border-radius:16px;padding:28px;
+  max-width:380px;width:100%;
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
+}
+.modal-box h3{margin-top:0;margin-bottom:8px;color:var(--primary-dark);}
+.modal-desc{font-size:0.9rem;color:var(--muted);margin-top:0;margin-bottom:16px;}
+.modal-box input[type=text]{margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;text-align:center;font-weight:bold;}
+.modal-msg{min-height:20px;font-size:0.88rem;margin:6px 0 10px;}
+.modal-msg.err{color:var(--danger);}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.modal-actions button{flex:1;min-width:120px;}
+#btnConfirmarCodigo{background:var(--primary);color:#fff;}
+#btnConfirmarCodigo:hover{background:var(--primary-dark);}
+.btn-secundario{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
+.btn-secundario:hover{background:#F1F5F9;}
 
 @media (max-width:560px){
   .grid{grid-template-columns:1fr;}

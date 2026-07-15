@@ -1,0 +1,38 @@
+/**
+ * admin.css
+ * -----------------------------------------------------------------------
+ * Estilos propios del panel de administrador. Se carga DESPUÉS de
+ * estilos.css en admin.html, y reutiliza sus variables y clases base
+ * (.card, .grid, .actions, button, .modal-msg, etc.)
+ * -----------------------------------------------------------------------
+ */
+
+.admin-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+
+.checkbox-row{display:flex;align-items:center;gap:8px;}
+.checkbox-row input{width:auto;}
+
+.editor-caja{margin-top:18px;padding-top:18px;border-top:1px dashed var(--border);}
+.editor-caja h3{font-size:0.95rem;margin-bottom:10px;color:var(--primary-dark);}
+.editor-caja select{margin:8px 0;max-width:220px;}
+
+.canvas-editor-wrap{margin-top:10px;overflow-x:auto;}
+.canvas-editor-wrap canvas{
+  width:100%;max-width:640px;border:1px solid var(--border);border-radius:8px;
+  cursor:crosshair;background:#f8fafc;display:block;
+}
+
+.lista-cajas{margin-top:16px;background:#F8FAFC;}
+.lista-cajas pre{
+  white-space:pre-wrap;word-break:break-all;font-size:0.8rem;color:var(--text);
+  margin:8px 0 0;
+}
+
+.codigos-resultado{
+  width:100%;min-height:140px;margin-top:10px;padding:12px;
+  border:1.5px solid var(--border);border-radius:9px;font-family:monospace;
+  font-size:0.85rem;background:#FBFCFD;resize:vertical;
+}
