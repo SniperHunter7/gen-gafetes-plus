@@ -24,20 +24,10 @@
         <select id="plantilla"><option>Cargando...</option></select>
       </div>
       <div class="full">
-        <a class="link-contacto" href="mailto:devops.jsd7@gmail.com?subject=Solicito%20nueva%20plantilla%20de%20gafete&body=Hola%2C%20no%20encontr%C3%A9%20un%20dise%C3%B1o%20que%20me%20guste%20en%20el%20generador%20de%20gafetes.%20Me%20gustar%C3%ADa%20solicitar%20uno%20nuevo%20con%20esta%20tem%C3%A1tica%3A%20">
+        <button type="button" id="btnSolicitarPlantilla" class="btn-secundario btn-ancho-completo">
           ✉️ ¿No encuentras tu diseño? Solicita una plantilla nueva
-        </a>
+        </button>
       </div>
-    </div>
-    <div class="previews" id="previews">
-      <figure>
-        <figcaption>Frente</figcaption>
-        <canvas id="canvasFront" width="1011" height="639"></canvas>
-      </figure>
-      <figure>
-        <figcaption>Reverso</figcaption>
-        <canvas id="canvasBack" width="1011" height="639"></canvas>
-      </figure>
     </div>
   </div>
 
@@ -86,7 +76,17 @@
       <button id="btnGenerar">📄 Generar PDF</button>
       <button id="btnLimpiar" type="button">🧹 Borrar datos</button>
     </div>
-    <div id="status"></div>    
+    <div id="status"></div>
+    <div class="previews" id="previews">
+      <figure>
+        <figcaption>Frente</figcaption>
+        <canvas id="canvasFront" width="1011" height="639"></canvas>
+      </figure>
+      <figure>
+        <figcaption>Reverso</figcaption>
+        <canvas id="canvasBack" width="1011" height="639"></canvas>
+      </figure>
+    </div>
   </div>
 
   <footer>Gafete escolar · generado localmente en tu navegador</footer>
@@ -96,12 +96,36 @@
 <div class="modal-overlay" id="modalCodigo">
   <div class="modal-box">
     <h3>Código de impresión</h3>
-    <p class="modal-desc">Ingresa el código de un solo uso que recibiste por correo o que te entregaron en la escuela para generar este gafete.</p>
+    <p class="modal-desc">Ingresa el código de un solo uso que recibiste por correo para generar este gafete.</p>
     <input type="text" id="inputCodigo" placeholder="Ej. 7F3K9QZX" autocomplete="off">
     <p id="modalCodigoMsg" class="modal-msg"></p>
     <div class="modal-actions">
       <button id="btnConfirmarCodigo">Confirmar y generar</button>
       <button id="btnCancelarCodigo" type="button" class="btn-secundario">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: solicitar una plantilla nueva -->
+<div class="modal-overlay" id="modalSolicitud">
+  <div class="modal-box modal-box-ancho">
+    <h3>Solicitar una plantilla nueva</h3>
+    <p class="modal-desc">
+      Para poder diseñarte un gafete nuevo, cuéntanos con el mayor detalle
+      posible qué te imaginas. Nos ayuda mucho que incluyas:
+    </p>
+    <ul class="modal-lista-ayuda">
+      <li>El tema o idea general (animales, espacio, deportes, etc.)</li>
+      <li>Los colores que te gustaría usar</li>
+      <li>Si lo quieres neutro (para niño y niña) o con un estilo particular</li>
+      <li>Cualquier otro detalle que tengas en mente</li>
+    </ul>
+    <textarea id="textoSolicitudPlantilla" class="textarea-solicitud"
+      placeholder="Ej. Me gustaría una plantilla con temática de dinosaurios, en colores verdes y azules, que sirva tanto para niño como para niña..."></textarea>
+    <p id="modalSolicitudMsg" class="modal-msg"></p>
+    <div class="modal-actions">
+      <button id="btnEnviarSolicitud">✉️ Enviar solicitud por correo</button>
+      <button id="btnCancelarSolicitud" type="button" class="btn-secundario">Cancelar</button>
     </div>
   </div>
 </div>

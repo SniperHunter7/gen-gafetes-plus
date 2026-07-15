@@ -107,6 +107,31 @@
       <p id="plantillaMsg" class="modal-msg"></p>
     </div>
 
+    <!-- ===== Sección: Previsualizar plantilla (modo debug) ===== -->
+    <div class="card">
+      <h2>Previsualizar plantilla</h2>
+      <div class="grid">
+        <div class="full">
+          <label for="debugPlantillaSelect">Plantilla a previsualizar</label>
+          <select id="debugPlantillaSelect"><option>Cargando...</option></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnActivarDebug" class="btn-secundario">🔲 Mostrar cajas</button>
+      </div>
+      <p id="debugMsg" class="modal-msg"></p>
+      <div class="previews">
+        <figure>
+          <figcaption>Frente</figcaption>
+          <canvas id="canvasDebugFrente" width="1011" height="639"></canvas>
+        </figure>
+        <figure>
+          <figcaption>Reverso</figcaption>
+          <canvas id="canvasDebugReverso" width="1011" height="639"></canvas>
+        </figure>
+      </div>
+    </div>
+
     <!-- ===== Sección: Códigos ===== -->
     <div class="card">
       <h2>Generar lote de códigos de impresión</h2>
