@@ -21,18 +21,13 @@
     <div class="grid">
       <div class="full">
         <label for="plantilla">Diseño del gafete</label>
-        <select id="plantilla"></select>
+        <select id="plantilla"><option>Cargando...</option></select>
       </div>
-    </div>
-    <div class="previews" id="previews">
-      <figure>
-        <figcaption>Frente</figcaption>
-        <canvas id="canvasFront" width="1011" height="639"></canvas>
-      </figure>
-      <figure>
-        <figcaption>Reverso</figcaption>
-        <canvas id="canvasBack" width="1011" height="639"></canvas>
-      </figure>
+      <div class="full">
+        <a class="link-contacto" href="mailto:contacto@tu-dominio.com?subject=Solicito%20nueva%20plantilla%20de%20gafete&body=Hola%2C%20no%20encontr%C3%A9%20un%20dise%C3%B1o%20que%20me%20guste%20en%20el%20generador%20de%20gafetes.%20Me%20gustar%C3%ADa%20solicitar%20uno%20nuevo%20con%20esta%20tem%C3%A1tica%3A%20">
+          ✉️ ¿No encuentras tu diseño? Solicita una plantilla nueva
+        </a>
+      </div>
     </div>
   </div>
 
@@ -81,30 +76,40 @@
       <button id="btnGenerar">📄 Generar PDF</button>
       <button id="btnLimpiar" type="button">🧹 Borrar datos</button>
     </div>
-    <div id="status"></div>    
+    <div id="status"></div>
+    <div class="previews" id="previews">
+      <figure>
+        <figcaption>Frente</figcaption>
+        <canvas id="canvasFront" width="1011" height="639"></canvas>
+      </figure>
+      <figure>
+        <figcaption>Reverso</figcaption>
+        <canvas id="canvasBack" width="1011" height="639"></canvas>
+      </figure>
+    </div>
   </div>
 
   <footer>Gafete escolar · generado localmente en tu navegador</footer>
 </div>
 
-<!-- Librería externa para la generación de PDF -->
+<!-- Modal: código de impresión de un solo uso -->
+<div class="modal-overlay" id="modalCodigo">
+  <div class="modal-box">
+    <h3>Código de impresión</h3>
+    <p class="modal-desc">Ingresa el código de un solo uso que recibiste por correo para generar este gafete.</p>
+    <input type="text" id="inputCodigo" placeholder="Ej. 7F3K9QZX" autocomplete="off">
+    <p id="modalCodigoMsg" class="modal-msg"></p>
+    <div class="modal-actions">
+      <button id="btnConfirmarCodigo">Confirmar y generar</button>
+      <button id="btnCancelarCodigo" type="button" class="btn-secundario">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Librería externa para la generación de PDF (script clásico, no módulo) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!--
-  Orden de carga de los módulos propios del proyecto.
-  IMPORTANTE: este orden importa, cada archivo depende de los anteriores.
-  1) config.js      -> constantes globales
-  2) utilidades.js  -> funciones auxiliares (usa config.js)
-  3) plantillas.js  -> clase Plantilla + registro (usa utilidades.js y config.js)
-  4) canvas.js      -> motor de dibujo (usa utilidades.js y config.js)
-  5) pdf.js         -> generación del PDF (usa config.js y jsPDF)
-  6) app.js         -> conecta todo con la interfaz (usa todos los anteriores)
--->
-<script src="js/config.js"></script>
-<script src="js/utilidades.js"></script>
-<script src="js/plantillas.js"></script>
-<script src="js/canvas.js"></script>
-<script src="js/pdf.js"></script>
-<script src="js/app.js"></script>
+<!-- Único punto de entrada de la app: app.js importa todo lo demás -->
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

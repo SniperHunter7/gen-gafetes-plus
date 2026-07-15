@@ -1,96 +1,123 @@
 # Generador de Gafetes Escolares
 
-Aplicación web (100% del lado del cliente) para capturar los datos de un
-alumno y generar un PDF listo para imprimir, enmicar y colgar con cordón.
-No requiere servidor: funciona en GitHub Pages o abriéndola directamente
-desde un hosting estático.
+Aplicación web para capturar los datos de un alumno y generar un PDF listo
+para imprimir, enmicar y colgar con cordón. El sitio (`index.html` /
+`admin.html`) vive en GitHub Pages; el catálogo de plantillas y los
+códigos de impresión de un solo uso viven en Firebase (Firestore +
+Authentication + App Check).
 
-## Privacidad
+## Privacidad de los datos del alumno
 
-Los datos que se capturan (nombre, escuela, maestra, teléfonos de
-emergencia, dirección) **nunca se envían a ningún servidor ni se guardan**.
-Viven únicamente en la memoria de la página mientras se genera el PDF, y se
-borran del formulario justo después de la descarga.
+Nombre, escuela, maestra, teléfonos de emergencia y dirección **nunca se
+guardan ni se envían a ningún servidor propio**. Viven solo en la memoria
+de la página mientras se genera el PDF, y se borran del formulario justo
+después de la descarga. Firebase, en este proyecto, **no** almacena datos
+de alumnos — solo el catálogo de diseños y los códigos de impresión.
 
 ## Estructura del proyecto
 
 ```
 Generador-Gafetes/
-├── index.html            Página principal (enlaza CSS y JS en el orden correcto)
+├── index.html              Página pública (captura de datos + PDF)
+├── admin.html               Panel de administrador (protegido con login)
 ├── css/
-│   └── estilos.css       Todos los estilos de la interfaz
+│   ├── estilos.css          Estilos de index.html (compartidos con admin.html)
+│   └── admin.css             Estilos propios del panel admin
 ├── js/
-│   ├── config.js         Constantes globales (tamaños, colores, modo debug)
-│   ├── utilidades.js     Funciones auxiliares genéricas
-│   ├── plantillas.js     Clase Plantilla + registro de plantillas disponibles
-│   ├── canvas.js         Motor de dibujo (fondo + datos + modo debug)
-│   ├── pdf.js            Generación del PDF final
-│   └── app.js            Conecta la interfaz con todo lo anterior
-├── images/
-│   ├── juguetes/         Plantilla "Olas de colores" (Frente-Fondo.png / Reverso-Fondo.png)
-│   ├── espacio/          (carpeta lista para una futura plantilla)
-│   ├── dinosaurios/      (carpeta lista para una futura plantilla)
-│   └── robots/           (carpeta lista para una futura plantilla)
+│   ├── config.js             Constantes globales
+│   ├── utilidades.js         Funciones auxiliares (imágenes, texto, códigos aleatorios)
+│   ├── firebase-init.js      ⚠️ AQUÍ SE PEGAN LAS LLAVES DE FIREBASE
+│   ├── plantillas.js         Clase Plantilla + catálogo leído desde Firestore
+│   ├── canvas.js              Motor de dibujo + modo de depuración (?debug)
+│   ├── pdf.js                 Generación del PDF final
+│   ├── codigos.js             Transacción que valida/canjea el código de impresión
+│   ├── app.js                 Punto de entrada de index.html
+│   ├── admin-auth.js          Login/logout del panel admin
+│   ├── admin-plantillas.js    Editor visual de cajas + guardado en Firestore
+│   ├── admin-codigos.js       Generación de lotes de códigos
+│   └── admin-app.js           Punto de entrada de admin.html
+├── images/                    Imágenes de las plantillas (sin cambios)
 └── README.md
 ```
 
+## Cómo pegar tus llaves de Firebase (paso obligatorio)
+
+Todo lo que necesitas configurar está en **un solo archivo**:
+`js/firebase-init.js`. Ábrelo y reemplaza:
+
+1. El objeto `firebaseConfig` completo, con el que copiaste de
+   **Firebase Console → Configuración del proyecto → Tus apps → gen-gafetes-plus-web**.
+2. La constante `RECAPTCHA_SITE_KEY`, con la **clave del sitio** (no la
+   secreta) que generaste en `google.com/recaptcha/admin`.
+
+Ningún otro archivo necesita tocarse para que la conexión funcione — todos
+los demás módulos importan `db`, `auth` y `appCheck` desde `firebase-init.js`.
+
 ## Cómo subirlo a GitHub Pages
 
-1. Crea un repositorio nuevo (público) en GitHub.
-2. Sube todo el contenido de esta carpeta **respetando la estructura**
-   (no cambies los nombres de las carpetas `css/`, `js/` e `images/`).
-3. Ve a **Settings → Pages**, elige la rama `main` y la carpeta `/ (root)`.
-4. Espera un par de minutos y GitHub te dará la URL pública.
+Igual que antes: sube todo (respetando la estructura de carpetas) y activa
+GitHub Pages en Settings → Pages, rama `main`, carpeta `/ (root)`.
 
-## Cómo agregar una nueva plantilla
+## Flujo del código de impresión de un solo uso
 
-1. Crea una carpeta dentro de `images/` con el nombre de tu tema (por
-   ejemplo `images/espacio/`) y coloca ahí tus dos archivos:
-   `Frente-Fondo.png` y `Reverso-Fondo.png`.
-2. Abre tu página con `?debug` al final de la URL
-   (ej. `index.html?debug`) y selecciona la plantilla nueva: vas a ver
-   recuadros rojos semitransparentes marcando dónde caen las cajas de
-   texto de la plantilla anterior, sobre tu nuevo diseño. Ajusta las
-   coordenadas hasta que las cajas coincidan con los espacios en blanco
-   de tu plantilla.
-3. Abre `js/plantillas.js` y agrega una nueva entrada en
-   `REGISTRO_PLANTILLAS`, siguiendo el ejemplo comentado que ya está en
-   el archivo.
-4. Recarga la página: la nueva plantilla aparece sola en el selector.
+1. El usuario captura los datos y elige su plantilla.
+2. Al dar clic en "Generar PDF", se le pide un código.
+3. La función `validarYCanjearCodigo()` (en `codigos.js`) ejecuta una
+   **transacción** contra Firestore: si el código existe y no ha sido
+   usado, lo marca como usado y permite continuar; si no, muestra el
+   error correspondiente y no genera nada.
+4. Las Security Rules de Firestore son las que de verdad hacen cumplir
+   esto — no el JavaScript del navegador.
+
+Los códigos se venden/generan por lotes desde el panel admin (sección
+"Generar lote de códigos de impresión"), asociados a un cliente y un
+monto, después de recibir el comprobante de pago por correo.
+
+## Cómo agregar una plantilla nueva (ahora vía panel admin)
+
+1. Entra a `admin.html` e inicia sesión con tu usuario administrador.
+2. En "Nueva plantilla", carga localmente (solo para previsualizar, no se
+   sube a ningún lado) las imágenes de frente y reverso de tu nuevo diseño.
+3. Marca cada caja con clic y arrastre directamente sobre la imagen.
+4. Llena la clave, el nombre, y las rutas donde vas a subir esas imágenes
+   dentro de tu repositorio de GitHub (ej. `images/espacio/Frente-Fondo.png`).
+5. Clic en "Guardar plantilla en Firestore".
+6. Sube las dos imágenes reales a esa ruta en tu repositorio de GitHub.
+7. Listo — la plantilla aparece sola en el selector de `index.html`, sin
+   tocar ningún archivo de código.
+
+(La alternativa de capturar la plantilla directamente en la consola de
+Firestore, campo por campo, sigue funcionando igual si prefieres hacerlo así.)
 
 ## Modo de depuración
 
-Agregar `?debug` a la URL (ej. `https://tu-usuario.github.io/tu-repo/?debug`)
-dibuja las cajas de texto activas sobre la previsualización, con su
-nombre, para facilitar el ajuste de coordenadas de nuevas plantillas.
+Agregar `?debug` a la URL de `index.html` dibuja las cajas de texto
+activas sobre la previsualización, con su nombre — útil para confirmar
+que una plantilla capturada desde el panel admin (o directo en Firestore)
+quedó bien alineada.
 
 ## Funcionalidades incluidas
 
-- Selector de plantillas (fácil de extender).
+- Selector de plantillas cargado en vivo desde Firestore.
 - Previsualización en tiempo real mientras se escribe.
-- Cambio de plantilla sin recargar la página.
-- Caché de imágenes por plantilla (no se vuelven a descargar).
+- Código de impresión de un solo uso, validado con transacción atómica.
+- Panel admin con login, editor visual de coordenadas, y generador de
+  lotes de códigos.
+- Enlace de "¿No encuentras tu plantilla?" que abre un correo prellenado.
 - Teléfonos de emergencia alineados a la izquierda y en negrita.
 - Dirección con tamaño de letra mayor y ajuste automático si es muy larga.
-- Ajuste automático de tamaño de letra en todos los campos.
-- Diseño responsive (funciona en celular).
-- PDF de una sola página, tamaño real de credencial (85.6 × 54 mm), con el
-  frente a la izquierda y el reverso a la derecha.
+- Diseño responsive. PDF de una sola página (frente y reverso lado a lado).
 
-## Posibles extensiones futuras
+## Servicios de Firebase usados (y por qué siguen siendo gratuitos)
 
-Estas funciones **no están incluidas** en esta versión, pero la
-arquitectura modular está pensada para poder agregarlas después sin
-reescribir el proyecto:
-
-- Fotografía del alumno.
-- Código QR o de barras.
-- Logo de la escuela.
-- Distintos tamaños de gafete por plantilla.
-- Exportación por lotes desde un archivo Excel.
+- **Firestore** (Edición Standard): catálogo de plantillas, códigos y lotes.
+- **Authentication**: solo para el login del panel admin.
+- **App Check** (reCAPTCHA v3): evita peticiones a Firestore desde fuera de la app.
+- **NO se usa Firebase Storage** (las imágenes siguen en GitHub) ni **Cloud
+  Functions** — por eso el proyecto no requiere tarjeta de crédito ni el
+  plan Blaze.
 
 ## Créditos de las plantillas
 
 Las imágenes dentro de `images/` son proporcionadas y de responsabilidad
-de quien administra este repositorio. Este proyecto no incluye ni redistribuye
-ningún material con derechos de autor de terceros.
+de quien administra este repositorio.

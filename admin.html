@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin — Generador de Gafetes</title>
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>🛠️ Panel de Administrador</h1>
+
+  <!-- ---------- LOGIN ---------- -->
+  <div class="card" id="seccionLogin">
+    <h2>Iniciar sesión</h2>
+    <div class="grid">
+      <div class="full">
+        <label for="loginEmail">Correo</label>
+        <input type="text" id="loginEmail" placeholder="tu-correo@gmail.com">
+      </div>
+      <div class="full">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btnLogin">Entrar</button>
+    </div>
+    <p id="loginMsg" class="modal-msg"></p>
+  </div>
+
+  <!-- ---------- PANEL (oculto hasta iniciar sesión) ---------- -->
+  <div id="panelAdmin" style="display:none;">
+
+    <div class="card admin-topbar">
+      <span id="sesionInfo"></span>
+      <button id="btnLogout" class="btn-secundario">Cerrar sesión</button>
+    </div>
+
+    <!-- ===== Sección: Plantillas ===== -->
+    <div class="card">
+      <h2>Nueva plantilla</h2>
+
+      <div class="grid">
+        <div>
+          <label for="pClave">Clave (ID, sin espacios)</label>
+          <input type="text" id="pClave" placeholder="ej. espacio">
+        </div>
+        <div>
+          <label for="pNombre">Nombre (se ve en el selector)</label>
+          <input type="text" id="pNombre" placeholder="ej. Espacio exterior">
+        </div>
+        <div>
+          <label for="pFrenteRuta">Ruta de imagen — Frente</label>
+          <input type="text" id="pFrenteRuta" placeholder="images/espacio/Frente-Fondo.png">
+        </div>
+        <div>
+          <label for="pReversoRuta">Ruta de imagen — Reverso</label>
+          <input type="text" id="pReversoRuta" placeholder="images/espacio/Reverso-Fondo.png">
+        </div>
+        <div class="full checkbox-row">
+          <input type="checkbox" id="pActivo" checked>
+          <label for="pActivo" style="margin:0;">Activa (visible para los usuarios)</label>
+        </div>
+      </div>
+
+      <p class="modal-desc">
+        Sube primero tus imágenes a esa ruta dentro de tu repositorio de GitHub.
+        Aquí abajo solo cárgalas <strong>localmente</strong> para marcar las cajas
+        con clic y arrastre — no se suben a ningún lado desde este panel.
+      </p>
+
+      <div class="editor-caja">
+        <h3>Frente — marca la caja de "Nombre del alumno"</h3>
+        <input type="file" id="archivoFrente" accept="image/*">
+        <div class="canvas-editor-wrap">
+          <canvas id="canvasEditorFrente" width="1011" height="639"></canvas>
+        </div>
+      </div>
+
+      <div class="editor-caja">
+        <h3>Reverso — marca cada caja</h3>
+        <input type="file" id="archivoReverso" accept="image/*">
+        <label for="campoActivoReverso">Caja que estás marcando:</label>
+        <select id="campoActivoReverso">
+          <option value="escuela">escuela</option>
+          <option value="maestra">maestra</option>
+          <option value="grado_grupo">grado_grupo</option>
+          <option value="tel_papa">tel_papa</option>
+          <option value="tel_mama">tel_mama</option>
+          <option value="direccion">direccion</option>
+        </select>
+        <div class="canvas-editor-wrap">
+          <canvas id="canvasEditorReverso" width="1011" height="639"></canvas>
+        </div>
+      </div>
+
+      <div class="card lista-cajas">
+        <strong>Cajas capturadas:</strong>
+        <pre id="listaCajas">(ninguna todavía)</pre>
+      </div>
+
+      <div class="actions">
+        <button id="btnGuardarPlantilla" disabled>💾 Guardar plantilla en Firestore</button>
+      </div>
+      <p id="plantillaMsg" class="modal-msg"></p>
+    </div>
+
+    <!-- ===== Sección: Códigos ===== -->
+    <div class="card">
+      <h2>Generar lote de códigos de impresión</h2>
+      <div class="grid">
+        <div>
+          <label for="cLoteId">ID de lote</label>
+          <input type="text" id="cLoteId" placeholder="ej. escuela-caic-2026-07">
+        </div>
+        <div>
+          <label for="cCliente">Cliente</label>
+          <input type="text" id="cCliente" placeholder="ej. Escuela CAIC">
+        </div>
+        <div>
+          <label for="cCantidad">Cantidad de códigos</label>
+          <input type="text" id="cCantidad" placeholder="ej. 100">
+        </div>
+        <div>
+          <label for="cMonto">Monto (MXN)</label>
+          <input type="text" id="cMonto" placeholder="ej. 500">
+        </div>
+        <div class="full">
+          <label for="cNotas">Notas</label>
+          <input type="text" id="cNotas" placeholder="ej. Pago por transferencia, comprobante recibido">
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnGenerarCodigos">🎟️ Generar códigos</button>
+      </div>
+      <p id="codigosMsg" class="modal-msg"></p>
+      <textarea id="codigosResultado" class="codigos-resultado" readonly placeholder="Los códigos generados aparecerán aquí..."></textarea>
+      <div class="actions">
+        <button id="btnDescargarCodigos" class="btn-secundario">⬇️ Descargar como .txt</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module" src="js/admin-app.js"></script>
+</body>
+</html>
