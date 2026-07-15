@@ -1,18 +1,12 @@
 /**
  * utilidades.js
  * -----------------------------------------------------------------------
- * Funciones auxiliares de propósito general, sin lógica de negocio propia
- * del gafete. Las usan canvas.js, plantillas.js y app.js.
- * Depende de: nada (puede cargarse justo después de config.js).
+ * Funciones auxiliares de propósito general. Módulo ES.
  * -----------------------------------------------------------------------
  */
 
-/**
- * Carga una imagen de forma asíncrona.
- * @param {string} src Ruta relativa o absoluta de la imagen.
- * @returns {Promise<HTMLImageElement>}
- */
-function cargarImagen(src){
+/** Carga una imagen de forma asíncrona. */
+export function cargarImagen(src){
   return new Promise((resolve, reject)=>{
     const img = new Image();
     img.onload = ()=>resolve(img);
@@ -21,15 +15,8 @@ function cargarImagen(src){
   });
 }
 
-/**
- * Parte un texto en líneas que quepan dentro de maxWidth, usando la fuente
- * que ya esté asignada en el contexto (ctx.font) al momento de llamarla.
- * @param {CanvasRenderingContext2D} ctx
- * @param {string} texto
- * @param {number} maxWidth
- * @returns {string[]} arreglo de líneas
- */
-function partirEnLineas(ctx, texto, maxWidth){
+/** Parte un texto en líneas que quepan en maxWidth, usando ctx.font ya asignado. */
+export function partirEnLineas(ctx, texto, maxWidth){
   const palabras = texto.split(/\s+/);
   const lineas = [];
   let actual = '';
@@ -46,18 +33,21 @@ function partirEnLineas(ctx, texto, maxWidth){
   return lineas;
 }
 
-/**
- * Devuelve una versión "debounced" de una función: solo se ejecuta después
- * de que pasen `delay` ms sin que se vuelva a llamar. Se usa para la
- * previsualización en tiempo real (no redibujar en cada tecla presionada).
- * @param {Function} fn
- * @param {number} delay
- * @returns {Function}
- */
-function conRetraso(fn, delay){
+/** Versión "debounced" de una función: se ejecuta `delay` ms después de la última llamada. */
+export function conRetraso(fn, delay){
   let temporizador = null;
   return function(...args){
     clearTimeout(temporizador);
     temporizador = setTimeout(()=>fn.apply(this, args), delay);
   };
+}
+
+/** Genera un código alfanumérico aleatorio, evitando caracteres confusos (0/O, 1/I). */
+export function generarCodigoAleatorio(longitud = 8){
+  const alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let codigo = '';
+  for(let i = 0; i < longitud; i++){
+    codigo += alfabeto[Math.floor(Math.random() * alfabeto.length)];
+  }
+  return codigo;
 }

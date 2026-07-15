@@ -1,18 +1,24 @@
 /**
  * app.js
  * -----------------------------------------------------------------------
- * Lógica principal: conecta el formulario, el selector de plantillas y los
- * botones con el motor de renderizado (canvas.js) y la generación de PDF
- * (pdf.js). Es el único archivo que toca el DOM directamente.
- *
- * Depende de: config.js, utilidades.js, plantillas.js, canvas.js, pdf.js.
- * Debe cargarse AL FINAL, después de todos los demás.
+ * Punto de entrada de index.html (único <script type="module">). Conecta
+ * el formulario, el selector de plantillas y los botones con el catálogo
+ * de Firestore, el motor de renderizado, la validación del código de
+ * impresión, y la generación del PDF.
  * -----------------------------------------------------------------------
  */
 
+import { cargarCatalogoPlantillas } from './plantillas.js';
+import { dibujarFrente, dibujarReverso } from './canvas.js';
+import { generarPDF } from './pdf.js';
+import { validarYCanjearCodigo } from './codigos.js';
+import { conRetraso } from './utilidades.js';
+import { RETRASO_PREVIEW_MS } from './config.js';
+
 const CAMPOS_FORMULARIO = ['nombre','escuela','maestra','grado','telPapa','telMama','direccion'];
 
-/** Lee los valores actuales del formulario. */
+let CATALOGO_PLANTILLAS = {};
+
 function obtenerDatosFormulario(){
   return {
     nombre:     document.getElementById('nombre').value.trim(),
@@ -25,25 +31,22 @@ function obtenerDatosFormulario(){
   };
 }
 
-/** Plantilla actualmente seleccionada en el <select>. */
 function obtenerPlantillaActiva(){
   const clave = document.getElementById('plantilla').value;
-  return REGISTRO_PLANTILLAS[clave];
+  return CATALOGO_PLANTILLAS[clave];
 }
 
-/** Llena el <select> de plantillas a partir de REGISTRO_PLANTILLAS. */
 function poblarSelectorPlantillas(){
   const sel = document.getElementById('plantilla');
   sel.innerHTML = '';
-  Object.values(REGISTRO_PLANTILLAS).forEach(plantilla=>{
+  Object.values(CATALOGO_PLANTILLAS).forEach(plantilla=>{
     const opt = document.createElement('option');
     opt.value = plantilla.clave;
-    opt.textContent = plantilla.label;
+    opt.textContent = plantilla.nombre;
     sel.appendChild(opt);
   });
 }
 
-/** Limpia el formulario y actualiza la previsualización. */
 function limpiarFormulario(){
   CAMPOS_FORMULARIO.forEach(id=>{
     document.getElementById(id).value = '';
@@ -54,12 +57,9 @@ function limpiarFormulario(){
   actualizarPrevisualizacion();
 }
 
-/**
- * Redibuja el frente y el reverso en los <canvas> de previsualización con
- * los datos actuales del formulario y la plantilla seleccionada.
- */
 async function actualizarPrevisualizacion(){
   const plantilla = obtenerPlantillaActiva();
+  if(!plantilla) return;
   const datos = obtenerDatosFormulario();
 
   const canvasFront = document.getElementById('canvasFront');
@@ -78,22 +78,56 @@ async function actualizarPrevisualizacion(){
 
 const previsualizacionConRetraso = conRetraso(actualizarPrevisualizacion, RETRASO_PREVIEW_MS);
 
-/** Maneja el clic en "Generar PDF". */
-async function alGenerarPDF(){
-  const statusEl = document.getElementById('status');
-  statusEl.className = '';
-  statusEl.textContent = '';
+// ---------------- Modal del código de impresión ----------------
 
-  const plantilla = obtenerPlantillaActiva();
-  const datos = obtenerDatosFormulario();
+function abrirModalCodigo(){
+  const modal = document.getElementById('modalCodigo');
+  const input = document.getElementById('inputCodigo');
+  const msg = document.getElementById('modalCodigoMsg');
+  msg.textContent = '';
+  msg.className = 'modal-msg';
+  input.value = '';
+  modal.style.display = 'flex';
+  input.focus();
+}
 
-  if(!datos.nombre){
-    statusEl.textContent = 'Falta el nombre del alumno(a).';
-    statusEl.className = 'err';
+function cerrarModalCodigo(){
+  document.getElementById('modalCodigo').style.display = 'none';
+}
+
+async function confirmarCodigoYGenerar(){
+  const msg = document.getElementById('modalCodigoMsg');
+  const input = document.getElementById('inputCodigo');
+  const btnConfirmar = document.getElementById('btnConfirmarCodigo');
+
+  msg.textContent = 'Validando código...';
+  msg.className = 'modal-msg';
+  btnConfirmar.disabled = true;
+
+  const resultado = await validarYCanjearCodigo(input.value);
+
+  btnConfirmar.disabled = false;
+
+  if(!resultado.ok){
+    msg.textContent = resultado.mensaje;
+    msg.className = 'modal-msg err';
     return;
   }
 
+  // Código válido y ya marcado como usado: ahora sí generamos el PDF.
+  cerrarModalCodigo();
+  await generarPDFConDatosActuales();
+}
+
+// ---------------- Generación real del PDF ----------------
+
+async function generarPDFConDatosActuales(){
+  const statusEl = document.getElementById('status');
+  const plantilla = obtenerPlantillaActiva();
+  const datos = obtenerDatosFormulario();
+
   statusEl.textContent = 'Generando PDF...';
+  statusEl.className = '';
 
   try{
     const { imgFrente, imgReverso } = await plantilla.obtenerImagenes();
@@ -112,8 +146,6 @@ async function alGenerarPDF(){
     statusEl.textContent = '✅ PDF generado y descargado. Borrando los datos del formulario...';
     statusEl.className = 'ok';
 
-    // Los datos capturados solo viven en esta función; una vez generado el
-    // PDF, se eliminan del formulario y de cualquier variable en memoria.
     setTimeout(()=>{
       for(const clave in datos){ datos[clave] = null; }
       limpiarFormulario();
@@ -128,25 +160,54 @@ async function alGenerarPDF(){
   }
 }
 
-/** Conecta todos los listeners de la interfaz. */
+/** Clic en "Generar PDF": valida que haya nombre, y abre el modal del código. */
+function alClicGenerar(){
+  const statusEl = document.getElementById('status');
+  statusEl.className = '';
+  statusEl.textContent = '';
+
+  const datos = obtenerDatosFormulario();
+  if(!datos.nombre){
+    statusEl.textContent = 'Falta el nombre del alumno(a).';
+    statusEl.className = 'err';
+    return;
+  }
+  abrirModalCodigo();
+}
+
+// ---------------- Inicialización ----------------
+
 function inicializarEventos(){
   document.getElementById('btnLimpiar').addEventListener('click', limpiarFormulario);
-  document.getElementById('btnGenerar').addEventListener('click', alGenerarPDF);
+  document.getElementById('btnGenerar').addEventListener('click', alClicGenerar);
   document.getElementById('plantilla').addEventListener('change', actualizarPrevisualizacion);
+
+  document.getElementById('btnConfirmarCodigo').addEventListener('click', confirmarCodigoYGenerar);
+  document.getElementById('btnCancelarCodigo').addEventListener('click', cerrarModalCodigo);
+  document.getElementById('inputCodigo').addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Enter') confirmarCodigoYGenerar();
+  });
 
   CAMPOS_FORMULARIO.forEach(id=>{
     document.getElementById(id).addEventListener('input', previsualizacionConRetraso);
   });
 }
 
-/** Punto de entrada: se ejecuta una vez que el DOM está listo. */
-function iniciarAplicacion(){
-  poblarSelectorPlantillas();
+async function iniciarAplicacion(){
   inicializarEventos();
-  actualizarPrevisualizacion();
 
-  if(MODO_DEBUG){
-    console.info('Modo de depuración activo: se muestran las cajas de texto sobre la previsualización.');
+  const statusEl = document.getElementById('status');
+  statusEl.textContent = 'Cargando catálogo de plantillas...';
+
+  try{
+    CATALOGO_PLANTILLAS = await cargarCatalogoPlantillas();
+    poblarSelectorPlantillas();
+    statusEl.textContent = '';
+    await actualizarPrevisualizacion();
+  }catch(err){
+    console.error('No se pudo cargar el catálogo de plantillas:', err);
+    statusEl.textContent = 'No se pudo cargar el catálogo de plantillas. Intenta recargar la página.';
+    statusEl.className = 'err';
   }
 }
 
