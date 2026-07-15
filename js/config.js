@@ -24,7 +24,7 @@ export const RETRASO_PREVIEW_MS = 150;
 
 // Correo al que se envían las solicitudes de plantillas nuevas.
 // Reemplaza esto por tu correo real de contacto.
-export const CORREO_SOLICITUDES = 'contacto@tu-dominio.com';
+export const CORREO_SOLICITUDES = 'devops.jsd7@gmail.com';
 
 
 // Nombres de los 7 campos de "cajas" que debe tener cada plantilla en Firestore.
