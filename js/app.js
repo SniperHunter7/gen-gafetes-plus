@@ -39,7 +39,18 @@ function obtenerPlantillaActiva(){
 function poblarSelectorPlantillas(){
   const sel = document.getElementById('plantilla');
   sel.innerHTML = '';
-  Object.values(CATALOGO_PLANTILLAS).forEach(plantilla=>{
+
+  const CLAVE_POR_DEFECTO = 'juguetes'; // clave de "Diseño Genérico"
+
+  const plantillas = Object.values(CATALOGO_PLANTILLAS);
+  const porDefecto = plantillas.find(p => p.clave === CLAVE_POR_DEFECTO);
+  const resto = plantillas
+    .filter(p => p.clave !== CLAVE_POR_DEFECTO)
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+  const enOrden = porDefecto ? [porDefecto, ...resto] : resto;
+
+  enOrden.forEach(plantilla=>{
     const opt = document.createElement('option');
     opt.value = plantilla.clave;
     opt.textContent = plantilla.nombre;
