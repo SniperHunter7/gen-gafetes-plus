@@ -29,12 +29,12 @@ import {
 //    Estos valores NO son secretos, están diseñados para ir en el cliente.
 // -----------------------------------------------------------------------
 const firebaseConfig = {
-  apiKey: "PEGA_AQUI_TU_API_KEY",
-  authDomain: "PEGA_AQUI_TU_AUTH_DOMAIN",
-  projectId: "PEGA_AQUI_TU_PROJECT_ID",
-  storageBucket: "PEGA_AQUI_TU_STORAGE_BUCKET",
-  messagingSenderId: "PEGA_AQUI_TU_MESSAGING_SENDER_ID",
-  appId: "PEGA_AQUI_TU_APP_ID"
+  apiKey: "AIzaSyDcvRPnYl4a5yOsWOUuXtVtLevjv8QWHXo",
+  authDomain: "gen-gafetes-plus.firebaseapp.com",
+  projectId: "gen-gafetes-plus",
+  storageBucket: "gen-gafetes-plus.firebasestorage.app",
+  messagingSenderId: "449070073487",
+  appId: "1:449070073487:web:b4f964c4e0622d2c2fd2fa"
 };
 
 // -----------------------------------------------------------------------
@@ -42,7 +42,7 @@ const firebaseConfig = {
 //    en google.com/recaptcha/admin. NO es la clave secreta (esa va en
 //    Firebase App Check, en la consola, no aquí en el código).
 // -----------------------------------------------------------------------
-const RECAPTCHA_SITE_KEY = "PEGA_AQUI_TU_SITE_KEY_DE_RECAPTCHA";
+const RECAPTCHA_SITE_KEY = "6LfPQFQtAAAAAF7uAv9GPOkZVOGuXyB2aO4azuw2";
 
 // -----------------------------------------------------------------------
 // A partir de aquí no hay nada que modificar.
