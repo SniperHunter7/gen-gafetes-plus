@@ -59,3 +59,17 @@ export async function cargarCatalogoPlantillas(){
   });
   return registro;
 }
+
+/**
+ * Igual que cargarCatalogoPlantillas(), pero sin filtrar por "activo".
+ * La usa admin.html para poder previsualizar (con cajas de depuración)
+ * incluso una plantilla que todavía no se marca como activa.
+ */
+export async function cargarCatalogoPlantillasTodas(){
+  const registro = {};
+  const snap = await getDocs(collection(db, 'plantillas'));
+  snap.forEach(docSnap=>{
+    registro[docSnap.id] = new Plantilla(docSnap.id, docSnap.data());
+  });
+  return registro;
+}

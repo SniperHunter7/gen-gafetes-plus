@@ -22,9 +22,10 @@ export const COLOR_TEXTO_POR_DEFECTO  = '#1E293B';
 
 export const RETRASO_PREVIEW_MS = 150;
 
-// Modo de depuración: agrega ?debug a la URL para ver las cajas de texto
-// dibujadas sobre la previsualización.
-export const MODO_DEBUG = new URLSearchParams(window.location.search).has('debug');
+// Correo al que se envían las solicitudes de plantillas nuevas.
+// Reemplaza esto por tu correo real de contacto.
+export const CORREO_SOLICITUDES = 'contacto@tu-dominio.com';
+
 
 // Nombres de los 7 campos de "cajas" que debe tener cada plantilla en Firestore.
 // Usado tanto por canvas.js (para dibujar) como por admin-plantillas.js

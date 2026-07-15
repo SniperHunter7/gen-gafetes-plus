@@ -13,7 +13,7 @@ import { dibujarFrente, dibujarReverso } from './canvas.js';
 import { generarPDF } from './pdf.js';
 import { validarYCanjearCodigo } from './codigos.js';
 import { conRetraso } from './utilidades.js';
-import { RETRASO_PREVIEW_MS } from './config.js';
+import { RETRASO_PREVIEW_MS, CORREO_SOLICITUDES } from './config.js';
 
 const CAMPOS_FORMULARIO = ['nombre','escuela','maestra','grado','telPapa','telMama','direccion'];
 
@@ -119,6 +119,41 @@ async function confirmarCodigoYGenerar(){
   await generarPDFConDatosActuales();
 }
 
+// ---------------- Modal de solicitud de plantilla nueva ----------------
+
+function abrirModalSolicitud(){
+  const modal = document.getElementById('modalSolicitud');
+  const texto = document.getElementById('textoSolicitudPlantilla');
+  const msg = document.getElementById('modalSolicitudMsg');
+  texto.value = '';
+  msg.textContent = '';
+  msg.className = 'modal-msg';
+  modal.style.display = 'flex';
+  texto.focus();
+}
+
+function cerrarModalSolicitud(){
+  document.getElementById('modalSolicitud').style.display = 'none';
+}
+
+function alEnviarSolicitud(){
+  const texto = document.getElementById('textoSolicitudPlantilla').value.trim();
+  const msg = document.getElementById('modalSolicitudMsg');
+
+  if(!texto){
+    msg.textContent = 'Cuéntanos aunque sea brevemente qué diseño buscas.';
+    msg.className = 'modal-msg err';
+    return;
+  }
+
+  const asunto = 'Solicito una plantilla nueva de gafete';
+  const cuerpo = `Hola, me gustaría solicitar una plantilla nueva con estas características:\n\n${texto}`;
+  const enlace = `mailto:${CORREO_SOLICITUDES}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+
+  window.location.href = enlace;
+  cerrarModalSolicitud();
+}
+
 // ---------------- Generación real del PDF ----------------
 
 async function generarPDFConDatosActuales(){
@@ -187,6 +222,10 @@ function inicializarEventos(){
   document.getElementById('inputCodigo').addEventListener('keydown', (ev)=>{
     if(ev.key === 'Enter') confirmarCodigoYGenerar();
   });
+
+  document.getElementById('btnSolicitarPlantilla').addEventListener('click', abrirModalSolicitud);
+  document.getElementById('btnEnviarSolicitud').addEventListener('click', alEnviarSolicitud);
+  document.getElementById('btnCancelarSolicitud').addEventListener('click', cerrarModalSolicitud);
 
   CAMPOS_FORMULARIO.forEach(id=>{
     document.getElementById(id).addEventListener('input', previsualizacionConRetraso);

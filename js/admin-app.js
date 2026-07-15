@@ -10,6 +10,7 @@
 import { iniciarSesionAdmin, cerrarSesionAdmin, observarSesion } from './admin-auth.js';
 import { inicializarEditorDePlantillas } from './admin-plantillas.js';
 import { inicializarGeneradorDeCodigos } from './admin-codigos.js';
+import { inicializarPreviewDebug } from './admin-debug.js';
 
 let panelYaInicializado = false;
 
@@ -23,6 +24,7 @@ function mostrarPanel(usuario){
   if(!panelYaInicializado){
     inicializarEditorDePlantillas();
     inicializarGeneradorDeCodigos();
+    inicializarPreviewDebug();
     panelYaInicializado = true;
   }
 }

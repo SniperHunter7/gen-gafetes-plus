@@ -8,7 +8,7 @@
  */
 
 import { partirEnLineas } from './utilidades.js';
-import { CARD_W, CARD_H, MODO_DEBUG } from './config.js';
+import { CARD_W, CARD_H } from './config.js';
 
 /**
  * Dibuja un texto dentro de una caja {x,y,w,h}, ajustando el tamaño de
@@ -63,9 +63,9 @@ export function dibujarValorEnCaja(ctx, texto, caja, fontFamily, opts={}){
   });
 }
 
-/** Dibuja cada caja como un rectángulo semitransparente con su nombre (modo ?debug). */
-export function dibujarCajasDebug(ctx, cajas){
-  if(!MODO_DEBUG) return;
+/** Dibuja cada caja como un rectángulo semitransparente con su nombre, si mostrar==true. */
+export function dibujarCajasDebug(ctx, cajas, mostrar){
+  if(!mostrar) return;
   ctx.save();
   ctx.font = '16px monospace';
   Object.entries(cajas).forEach(([nombreCaja, caja])=>{
@@ -83,7 +83,7 @@ export function dibujarCajasDebug(ctx, cajas){
 }
 
 /** Dibuja la cara frontal: fondo de la plantilla + nombre del alumno. */
-export async function dibujarFrente(ctx, imgFondo, nombre, plantilla){
+export async function dibujarFrente(ctx, imgFondo, nombre, plantilla, mostrarDebug = false){
   ctx.clearRect(0,0,CARD_W,CARD_H);
   ctx.drawImage(imgFondo, 0, 0, CARD_W, CARD_H);
 
@@ -92,11 +92,11 @@ export async function dibujarFrente(ctx, imgFondo, nombre, plantilla){
     maxFontSize: 70, minFontSize: 26, paddingX: 20, paddingY: 20
   });
 
-  dibujarCajasDebug(ctx, { nombre_alumno: plantilla.cajas.nombre_alumno });
+  dibujarCajasDebug(ctx, { nombre_alumno: plantilla.cajas.nombre_alumno }, mostrarDebug);
 }
 
 /** Dibuja la cara trasera: fondo de la plantilla + todos los datos de contacto/escolares. */
-export async function dibujarReverso(ctx, imgFondo, datos, plantilla){
+export async function dibujarReverso(ctx, imgFondo, datos, plantilla, mostrarDebug = false){
   ctx.clearRect(0,0,CARD_W,CARD_H);
   ctx.drawImage(imgFondo, 0, 0, CARD_W, CARD_H);
 
@@ -114,5 +114,5 @@ export async function dibujarReverso(ctx, imgFondo, datos, plantilla){
   dibujarCajasDebug(ctx, {
     escuela: cajas.escuela, maestra: cajas.maestra, grado_grupo: cajas.grado_grupo,
     tel_papa: cajas.tel_papa, tel_mama: cajas.tel_mama, direccion: cajas.direccion
-  });
+  }, mostrarDebug);
 }
