@@ -65,6 +65,12 @@ input:focus, select:focus{outline:none;border-color:var(--primary);background:#f
 }
 .link-contacto:hover{text-decoration:underline;}
 
+.btn-ancho-completo{
+  width:100%;background:transparent;color:var(--primary-dark);
+  border:1.5px solid var(--border);font-weight:normal;font-size:0.9rem;
+}
+.btn-ancho-completo:hover{background:#F1F5F9;}
+
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
 button{
   font-family:inherit;font-size:0.95rem;font-weight:bold;border:none;border-radius:10px;
@@ -116,6 +122,18 @@ footer{text-align:center;color:var(--muted);font-size:0.8rem;margin-top:30px;}
 #btnConfirmarCodigo:hover{background:var(--primary-dark);}
 .btn-secundario{background:transparent;color:var(--muted);border:1.5px solid var(--border);}
 .btn-secundario:hover{background:#F1F5F9;}
+
+.modal-box-ancho{max-width:520px;}
+.modal-lista-ayuda{
+  font-size:0.87rem;color:var(--text);margin:0 0 14px;padding-left:20px;
+}
+.modal-lista-ayuda li{margin-bottom:4px;}
+.textarea-solicitud{
+  width:100%;min-height:160px;padding:12px 14px;border:1.5px solid var(--border);
+  border-radius:9px;font-size:0.95rem;font-family:inherit;background:#FBFCFD;
+  color:var(--text);resize:vertical;
+}
+.textarea-solicitud:focus{outline:none;border-color:var(--primary);background:#fff;}
 
 @media (max-width:560px){
   .grid{grid-template-columns:1fr;}
