@@ -24,10 +24,20 @@
         <select id="plantilla"><option>Cargando...</option></select>
       </div>
       <div class="full">
-        <a class="link-contacto" href="mailto:contacto@tu-dominio.com?subject=Solicito%20nueva%20plantilla%20de%20gafete&body=Hola%2C%20no%20encontr%C3%A9%20un%20dise%C3%B1o%20que%20me%20guste%20en%20el%20generador%20de%20gafetes.%20Me%20gustar%C3%ADa%20solicitar%20uno%20nuevo%20con%20esta%20tem%C3%A1tica%3A%20">
+        <a class="link-contacto" href="mailto:devops.jsd7@gmail.com?subject=Solicito%20nueva%20plantilla%20de%20gafete&body=Hola%2C%20no%20encontr%C3%A9%20un%20dise%C3%B1o%20que%20me%20guste%20en%20el%20generador%20de%20gafetes.%20Me%20gustar%C3%ADa%20solicitar%20uno%20nuevo%20con%20esta%20tem%C3%A1tica%3A%20">
           ✉️ ¿No encuentras tu diseño? Solicita una plantilla nueva
         </a>
       </div>
+    </div>
+    <div class="previews" id="previews">
+      <figure>
+        <figcaption>Frente</figcaption>
+        <canvas id="canvasFront" width="1011" height="639"></canvas>
+      </figure>
+      <figure>
+        <figcaption>Reverso</figcaption>
+        <canvas id="canvasBack" width="1011" height="639"></canvas>
+      </figure>
     </div>
   </div>
 
@@ -76,17 +86,7 @@
       <button id="btnGenerar">📄 Generar PDF</button>
       <button id="btnLimpiar" type="button">🧹 Borrar datos</button>
     </div>
-    <div id="status"></div>
-    <div class="previews" id="previews">
-      <figure>
-        <figcaption>Frente</figcaption>
-        <canvas id="canvasFront" width="1011" height="639"></canvas>
-      </figure>
-      <figure>
-        <figcaption>Reverso</figcaption>
-        <canvas id="canvasBack" width="1011" height="639"></canvas>
-      </figure>
-    </div>
+    <div id="status"></div>    
   </div>
 
   <footer>Gafete escolar · generado localmente en tu navegador</footer>
@@ -96,7 +96,7 @@
 <div class="modal-overlay" id="modalCodigo">
   <div class="modal-box">
     <h3>Código de impresión</h3>
-    <p class="modal-desc">Ingresa el código de un solo uso que recibiste por correo para generar este gafete.</p>
+    <p class="modal-desc">Ingresa el código de un solo uso que recibiste por correo o que te entregaron en la escuela para generar este gafete.</p>
     <input type="text" id="inputCodigo" placeholder="Ej. 7F3K9QZX" autocomplete="off">
     <p id="modalCodigoMsg" class="modal-msg"></p>
     <div class="modal-actions">
